@@ -8,12 +8,12 @@ public class DanceCircle : MonoBehaviour
 
     private float timer = 0f;
     private bool clicked = false;
-    private DanceController controller;
+    private DanceController2 controller;
 
     void Start()
     {
         transform.localScale = Vector3.one * minScale;
-        controller = FindObjectOfType<DanceController>();
+        controller = FindObjectOfType<DanceController2>();
     }
 
     void Update()
