@@ -6,11 +6,11 @@ public class TrapInfoHandler : MonoBehaviour
     [SerializeField] private TextMeshProUGUI textAmount;
     [SerializeField] private GameObject arrows;
     [SerializeField] private int maxAmount;
-    private int currentAmount;
+    public int CurrentAmount { get; private set; }
     
     private void Start()
     {
-        currentAmount = maxAmount;
+        CurrentAmount = maxAmount;
     }
 
     public void SetArrowsActive(bool active)
@@ -20,7 +20,7 @@ public class TrapInfoHandler : MonoBehaviour
 
     public void UpdateAmount(int amount)
     {
-        currentAmount += amount;
-        textAmount.SetText($"[{currentAmount}/{maxAmount}]");
+        CurrentAmount += amount;
+        textAmount.SetText($"[{CurrentAmount}/{maxAmount}]");
     }
 }
