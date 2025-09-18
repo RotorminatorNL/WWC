@@ -20,12 +20,13 @@ public class Minigame : MonoBehaviour
     public TMP_Text killsText;
     public GameObject failsTextHolder;
     public TMP_Text failsText;
+    public GameObject loreScreen;
+    public GameObject startScreen;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        timer = startTimer; 
-        NextAction();
+        timer = 1000000; 
     }
 
     // Update is called once per frame
@@ -108,7 +109,7 @@ public class Minigame : MonoBehaviour
             fails++;
             timer = startTimer;
         }
-
+    
         UpdateUI();
         NextAction();
     }
@@ -161,15 +162,10 @@ public class Minigame : MonoBehaviour
     {
         startTimer = 5;
         loseScreen.SetActive(false);
-        timer = startTimer;
- 
-        timerTextHolder.SetActive(true);
-        killsTextHolder.SetActive(true);
-        failsTextHolder.SetActive(true);
+        startScreen.SetActive(true);
         fails = 0;
         kills = 0;
 
-        NextAction();
         UpdateUI();
     }
 
@@ -208,5 +204,20 @@ public class Minigame : MonoBehaviour
         {
             killsText.text = "Kills: o o o o x";
         }
+    }
+
+    public void loadLore()
+    {
+        loreScreen.SetActive(true);
+    }
+
+    public void startGame()
+    {
+        timer = startTimer;
+        startScreen.SetActive(false);
+        NextAction();
+        timerTextHolder.SetActive(true);
+        killsTextHolder.SetActive(true);
+        failsTextHolder.SetActive(true);
     }
 }
