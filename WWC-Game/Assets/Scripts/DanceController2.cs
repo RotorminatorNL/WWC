@@ -14,13 +14,19 @@ public class DanceController2 : MonoBehaviour
     public Image[] hearts;           
     public int startingLives = 3;
 
-    [Header("Audio")] 
+    [Header("Audio")]
     public AudioSource audioSource;  
-    public AudioClip missAudioClip;   // geluid bij mis
-    public AudioClip failAudioClip;   // geluid bij game over
+    public AudioClip missAudioClip;   
+    public AudioClip failAudioClip;  
+    public AudioClip winAudioClip;  
+    public AudioClip hitAudioClip;  
 
-    [Header("GameOver UI")]
-    public GameObject failedScreen;   // panel met retry + exit
+    [Header("UI Panels")]
+    public GameObject failedScreen;   
+    public GameObject winScreen;      
+
+    [Header("Progress")]
+    public Text progressText;         
 
     [Header("Spawn Settings")]
     public float spawnInterval = 2f;       
@@ -29,13 +35,17 @@ public class DanceController2 : MonoBehaviour
 
     private int lives;
     private bool isGameOver = false;
+    private int hitCount = 0;
+    private int winTarget = 21;
 
     void Start()
     {
         lives = startingLives;
 
-        if (failedScreen != null)
-            failedScreen.SetActive(false); // standaard uit
+        if (failedScreen != null) failedScreen.SetActive(false);
+        if (winScreen != null) winScreen.SetActive(false);
+
+        UpdateProgressText();
 
         StartCoroutine(SpawnRoutine());
     }
@@ -44,12 +54,28 @@ public class DanceController2 : MonoBehaviour
     {
         while (!isGameOver)
         {
-            SpawnCircle();
 
-            // interval iets sneller
+            int extraCircles = 0;
+
+            if (hitCount >= winTarget * 0.5f) 
+                extraCircles = Random.Range(0, 2); 
+
+            if (hitCount >= winTarget * 0.75f) 
+                extraCircles = Random.Range(1, 3); 
+
+            SpawnCircle();
+            for (int i = 0; i < extraCircles; i++)
+            {
+                SpawnCircle();
+            }
+
+
             spawnInterval = Mathf.Max(minInterval, spawnInterval - intervalDecreaseRate);
 
-            yield return new WaitForSeconds(spawnInterval);
+            float difficultyFactor = 1f - (float)hitCount / winTarget; 
+            float adjustedInterval = Mathf.Max(minInterval, spawnInterval * difficultyFactor);
+
+            yield return new WaitForSeconds(adjustedInterval);
         }
     }
 
@@ -65,9 +91,32 @@ public class DanceController2 : MonoBehaviour
         circle.GetComponent<Button>().onClick.AddListener(() => circle.GetComponent<DanceCircle>().OnClick());
     }
 
+    // public void Hit(GameObject circle)
+    // {
+    //     Destroy(circle);
+    //     hitCount++;
+
+    //     UpdateProgressText();
+
+    //     if (hitCount >= winTarget)
+    //     {
+    //         WinGame();
+    //     }
+    // }
     public void Hit(GameObject circle)
     {
         Destroy(circle);
+        hitCount++;
+
+        if (audioSource != null && hitAudioClip != null)
+            audioSource.PlayOneShot(hitAudioClip);
+
+        UpdateProgressText();
+
+        if (hitCount >= winTarget)
+        {
+            WinGame();
+        }
     }
 
     public void Miss(GameObject circle)
@@ -97,37 +146,59 @@ public class DanceController2 : MonoBehaviour
         flashScreen.color = new Color(1, 0, 0, 0);
     }
 
+    void UpdateProgressText()
+    {
+        if (progressText != null)
+            progressText.text = hitCount + "/" + winTarget;
+    }
+
     void GameOver()
     {
         isGameOver = true;
         StopAllCoroutines();
 
-        // Verwijder actieve circles
         DanceCircle[] activeCircles = FindObjectsOfType<DanceCircle>();
         foreach (DanceCircle circle in activeCircles)
         {
             Destroy(circle.gameObject);
         }
 
-        // Speel fail audio
         if (audioSource != null && failAudioClip != null)
             audioSource.PlayOneShot(failAudioClip);
 
-        // Toon GameOver panel
         if (failedScreen != null)
             failedScreen.SetActive(true);
     }
 
-    // Functie voor Retry knop
+    void WinGame()
+    {
+        isGameOver = true;
+        StopAllCoroutines();
+
+        DanceCircle[] activeCircles = FindObjectsOfType<DanceCircle>();
+        foreach (DanceCircle circle in activeCircles)
+        {
+            Destroy(circle.gameObject);
+        }
+
+        if (audioSource != null && winAudioClip != null)
+            audioSource.PlayOneShot(winAudioClip);
+
+        if (winScreen != null)
+            winScreen.SetActive(true);
+    }
+
     public void RetryGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
-    // Functie voor Exit knop
     public void ExitGame()
     {
+        #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false; 
+        #else
         Application.Quit();
-        Debug.Log("you just destroyed ur pc");
+        #endif
     }
 }
