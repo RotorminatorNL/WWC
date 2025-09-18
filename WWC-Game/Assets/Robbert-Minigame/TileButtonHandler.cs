@@ -19,8 +19,24 @@ public class TileButtonHandler : MonoBehaviour
         standardBtnImage = btnImage.sprite;
     }
 
-    public void SwapButtonImage()
+    public void SwapButtonImage(int tunnelTrap = 0)
     {
+        if (tunnelTrap >= 1)
+        {
+            if (tunnelTrap == 1)
+            {
+                TrapNr = 2;
+                btnImage.sprite = tunnelTrapImage;
+                return;
+            }
+            else
+            {
+                TrapNr = 0;
+                btnImage.sprite = standardBtnImage;
+                return;
+            }
+        }
+
         if (TrapNr == 0)
         {
             if (trapSelectHandler.SelectedTrap == 0) return;
@@ -32,19 +48,23 @@ public class TileButtonHandler : MonoBehaviour
                 GridHandler.DisableSurroundingBtns(TileNr, true);
                 btnImage.sprite = pitTrapImage;
             }
-            if (trapSelectHandler.SelectedTrap == 2 && trapSelectHandler.TunnelTrapAvailable && GridHandler.SpaceForTunnelTrap(TileNr))
+            if (trapSelectHandler.SelectedTrap == 2 && trapSelectHandler.TunnelTrapAvailable)
             {
-                TrapNr = 2;
+                bool placed = GridHandler.PlaceTunnelTrap(TileNr);
+                if (!placed) return;
                 trapSelectHandler.TrapUpdateAmount(TrapNr, -1);
-                btnImage.sprite = tunnelTrapImage;
             }
         }
         else
         {
             trapSelectHandler.TrapUpdateAmount(TrapNr, 1);
-            if (TrapNr == 1) GridHandler.DisableSurroundingBtns(TileNr, false);
-            TrapNr = 0;
-            btnImage.sprite = standardBtnImage;
+            if (TrapNr == 1)
+            {
+                GridHandler.DisableSurroundingBtns(TileNr, false);
+                TrapNr = 0;
+                btnImage.sprite = standardBtnImage;
+            }
+            if (TrapNr == 2) GridHandler.RemoveTunnelTrap(TileNr);
         }
     }
 }

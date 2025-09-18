@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Unity.Burst.CompilerServices;
 using UnityEngine;
+using static Unity.Collections.AllocatorManager;
 
 public class GridHandler : MonoBehaviour
 {
@@ -40,9 +41,43 @@ public class GridHandler : MonoBehaviour
     }
 
 
-    public bool SpaceForTunnelTrap(int tileNr)
+    public bool PlaceTunnelTrap(int tileNr)
     {
+        bool able = AbleToTunnelTrap(tileNr);
+        if (able)
+        {
+            for (int i = 0; i < 6; i++) tileBtns[tileNr + i].SwapButtonImage(1);
+        }
+        return able;
+    }
 
-        return true;
+    private bool AbleToTunnelTrap(int tileNr)
+    {
+        int tileRow = Mathf.FloorToInt(tileNr / 8f);
+        bool sameRow = true;
+        bool blocked = false;
+        for (int i = 0; i < 6; i++)
+        {
+            sameRow = Mathf.FloorToInt((tileNr + i) / 8f) == tileRow;
+            if (sameRow && !blocked) blocked = tileBtns[tileNr + i].TrapNr != 0;
+        }
+
+        return sameRow && !blocked;
+    }
+
+    public void RemoveTunnelTrap(int tileNr)
+    {
+        int tileRow = Mathf.FloorToInt(tileNr / 8f);
+        bool sameRow = true; 
+        for (int i = -6; i < 0; i++)
+        {
+            sameRow = Mathf.FloorToInt((tileNr + i) / 8f) == tileRow;
+            if (sameRow) tileBtns[tileNr + i].SwapButtonImage(2);
+        }
+        for (int i = 0; i < 6; i++)
+        {
+            sameRow = Mathf.FloorToInt((tileNr + i) / 8f) == tileRow;
+            if (sameRow) tileBtns[tileNr + i].SwapButtonImage(2);
+        }   
     }
 }
