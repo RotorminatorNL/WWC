@@ -22,16 +22,27 @@ public class GridHandler : MonoBehaviour
     {
         int increase = disable ? 1 : -1;
 
+        int tileRow = Mathf.FloorToInt(tileNr / 8f);
+
         int tileLeftNr = tileNr - 1;
-        if (tileLeftNr >= 0 && tileLeftNr <= tileBtns.Count - 1) tileBtns[tileLeftNr].AmountTrapsBlockingTile += increase;
+        bool sameRow = Mathf.FloorToInt(tileLeftNr / 8f) == tileRow;
+        if (sameRow && tileLeftNr >= 0 && tileLeftNr <= tileBtns.Count - 1) tileBtns[tileLeftNr].AmountTrapsBlockingTile += increase;
 
         int tileRightNr = tileNr + 1;
-        if (tileRightNr >= 0 && tileRightNr <= tileBtns.Count - 1) tileBtns[tileRightNr].AmountTrapsBlockingTile += increase;
+        sameRow = Mathf.FloorToInt(tileRightNr / 8f) == tileRow;
+        if (sameRow && tileRightNr >= 0 && tileRightNr <= tileBtns.Count - 1) tileBtns[tileRightNr].AmountTrapsBlockingTile += increase;
 
         int tileUpNr = tileNr - 8;
         if (tileUpNr >= 0 && tileUpNr <= tileBtns.Count - 1) tileBtns[tileUpNr].AmountTrapsBlockingTile += increase;
 
         int tileDownNr = tileNr + 8;
         if (tileDownNr >= 0 && tileDownNr <= tileBtns.Count - 1) tileBtns[tileDownNr].AmountTrapsBlockingTile += increase;
+    }
+
+
+    public bool SpaceForTunnelTrap(int tileNr)
+    {
+
+        return true;
     }
 }
