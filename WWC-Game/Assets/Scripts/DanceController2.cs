@@ -46,7 +46,15 @@ public class DanceController2 : MonoBehaviour
         if (winScreen != null) winScreen.SetActive(false);
 
         UpdateProgressText();
-
+    }
+    
+    public void StartGame()
+    {
+        // Begin de spawn routine en reset variabelen
+        lives = startingLives;
+        isGameOver = false;
+        hitCount = 0;
+        UpdateProgressText();
         StartCoroutine(SpawnRoutine());
     }
 
@@ -91,18 +99,6 @@ public class DanceController2 : MonoBehaviour
         circle.GetComponent<Button>().onClick.AddListener(() => circle.GetComponent<DanceCircle>().OnClick());
     }
 
-    // public void Hit(GameObject circle)
-    // {
-    //     Destroy(circle);
-    //     hitCount++;
-
-    //     UpdateProgressText();
-
-    //     if (hitCount >= winTarget)
-    //     {
-    //         WinGame();
-    //     }
-    // }
     public void Hit(GameObject circle)
     {
         Destroy(circle);
