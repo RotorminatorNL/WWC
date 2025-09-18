@@ -1,16 +1,21 @@
 using TMPro;
 using UnityEngine;
 
-public class TrapAmountHandler : MonoBehaviour
+public class TrapInfoHandler : MonoBehaviour
 {
+    [SerializeField] private TextMeshProUGUI textAmount;
+    [SerializeField] private GameObject arrows;
     [SerializeField] private int maxAmount;
     private int currentAmount;
-    private TextMeshProUGUI textAmount;
-
+    
     private void Start()
     {
-        textAmount = GetComponent<TextMeshProUGUI>();
         currentAmount = maxAmount;
+    }
+
+    public void SetArrowsActive(bool active)
+    {
+        arrows.SetActive(active);
     }
 
     public void UpdateAmount(int amount)
