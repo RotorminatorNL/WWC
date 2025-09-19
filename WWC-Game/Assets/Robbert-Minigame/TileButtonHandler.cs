@@ -31,6 +31,7 @@ public class TileButtonHandler : MonoBehaviour
             }
             else
             {
+                if (TrapNr != 2) return;
                 TrapNr = 0;
                 btnImage.sprite = standardBtnImage;
                 return;
