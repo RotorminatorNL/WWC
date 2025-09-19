@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: abc171391151eaf41a55c1350b67ecae
+guid: 219e2f9a8843b5145a78f45b065a0bc3
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1942417293512880478
-    second: ScuffedThreeLionsBanner_0
+      213: -5265271799011043838
+    second: ScuffedTouchGrass_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ScuffedThreeLionsBanner_0
+      name: ScuffedTouchGrass_0
       rect:
         serializedVersion: 2
-        x: 53
+        x: 3
         y: 0
-        width: 1614
-        height: 1067
+        width: 682
+        height: 430
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e513961bc3ad4fa10800000000000000
-      internalID: 1942417293512880478
+      spriteID: 2069016023ffde6b0800000000000000
+      internalID: -5265271799011043838
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      ScuffedThreeLionsBanner_0: 1942417293512880478
+      ScuffedTouchGrass_0: -5265271799011043838
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

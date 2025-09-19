@@ -8,6 +8,8 @@ public class TrapSelectHandler : MonoBehaviour
     public bool PitTrapAvailable => pitTrapInfoHandler.CurrentAmount > 0;
     public bool TunnelTrapAvailable => tunnelTrapInfoHandler.CurrentAmount > 0;
 
+    
+
     public void SetSelectedTrap(int trapNr)
     {
         if (SelectedTrap == trapNr)

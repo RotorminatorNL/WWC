@@ -6,8 +6,10 @@ public class TileButtonHandler : MonoBehaviour
     [SerializeField] private TrapSelectHandler trapSelectHandler;
     [SerializeField] private Sprite pitTrapImage;
     [SerializeField] private Sprite tunnelTrapImage;
+
     private Sprite standardBtnImage;
     private Image btnImage;
+
     public int TrapNr { get; private set; } = 0;
     public GridHandler GridHandler { get; set; }
     public int TileNr { get; set; } = 0;
