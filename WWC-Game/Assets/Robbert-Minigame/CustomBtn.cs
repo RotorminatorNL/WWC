@@ -2,27 +2,23 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using UnityEngine.UIElements.Experimental;
 
 public class CustomBtn : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    [SerializeField] private Color hoverColor = new(.9f, .9f, .9f);
-    [SerializeField] private float hoverFadeTime = .2f;
+    [SerializeField, Range(0, 1)] private float hoverAlphaPercent = 0.8f;
+    [SerializeField, Range(0, 1)] private float hoverFadeTime = 0.2f;
     [Space(10)]
-    [SerializeField] private Color clickedColor = new(.75f, .75f, .75f);
-    [SerializeField] private float clickedFadeTime = .1f;
-    [Space(10)] 
+    [SerializeField, Range(0, 1)] private float clickedAlphaPercent = 0.5f;
+    [SerializeField, Range(0, 1)] private float clickedFadeTime = 0.1f;
+    [Space(10)]
+    [SerializeField] private UnityEvent onHover;
     [SerializeField] private UnityEvent onClick;
 
     private Image btnImage;
-    private Color initialColor;
+    private Color initColor;
 
-    private float hoverColorDifR;
-    private float hoverColorDifG;
-    private float hoverColorDifB;
-    private float clickedColorDifR;
-    private float clickedColorDifG;
-    private float clickedColorDifB;
+    private float hoverAlphaDif;
+    private float clickedAplhaDif;
 
     private bool fadingIn = false;
     private bool fadingOut = false;
@@ -34,13 +30,9 @@ public class CustomBtn : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     private void Start()
     {
         btnImage = GetComponent<Image>();
-        initialColor = btnImage.color;
-        hoverColorDifR = initialColor.r - hoverColor.r;
-        hoverColorDifG = initialColor.g - hoverColor.g;
-        hoverColorDifB = initialColor.b - hoverColor.b;
-        clickedColorDifR = hoverColor.r - clickedColor.r;
-        clickedColorDifG = hoverColor.g - clickedColor.g;
-        clickedColorDifB = hoverColor.b - clickedColor.b;
+        initColor = btnImage.color;
+        hoverAlphaDif = initColor.a - hoverAlphaPercent;
+        clickedAplhaDif = hoverAlphaPercent - clickedAlphaPercent;
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -81,10 +73,8 @@ public class CustomBtn : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             if (currentHoverFadeTime <= 0) fadingOut = false;
         }
 
-        float newColorR = initialColor.r - (hoverColorDifR / hoverFadeTime * currentHoverFadeTime);
-        float newColorG = initialColor.g - (hoverColorDifG / hoverFadeTime * currentHoverFadeTime);
-        float newColorB = initialColor.b - (hoverColorDifB / hoverFadeTime * currentHoverFadeTime);
-        btnImage.color = new Color(newColorR, newColorG, newColorB);
+        float newAplha = initColor.a - (hoverAlphaDif / hoverFadeTime * currentHoverFadeTime);
+        btnImage.color = new Color(initColor.r, initColor.g, initColor.b, newAplha);
     }
 
     private void ClickFadeHandler()
@@ -100,9 +90,7 @@ public class CustomBtn : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             if (currentClickedFadeTime <= 0) clicked = false;
         }
 
-        float newColorR = (initialColor.r - hoverColorDifR) - (clickedColorDifR / clickedFadeTime * currentClickedFadeTime);
-        float newColorG = (initialColor.g - hoverColorDifG) - (clickedColorDifG / clickedFadeTime * currentClickedFadeTime);
-        float newColorB = (initialColor.b - hoverColorDifB) - (clickedColorDifB / clickedFadeTime * currentClickedFadeTime);
-        btnImage.color = new Color(newColorR, newColorG, newColorB);
+        float newAplha = (initColor.a - hoverAlphaDif) - (clickedAplhaDif / clickedFadeTime * currentClickedFadeTime);
+        btnImage.color = new Color(initColor.r, initColor.g, initColor.b, newAplha);
     }
 }
