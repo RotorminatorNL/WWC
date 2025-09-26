@@ -8,10 +8,11 @@ public class CustomBtn : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     [SerializeField, Range(0, 1)] private float hoverAlphaPercent = 0.8f;
     [SerializeField, Range(0, 1)] private float hoverFadeTime = 0.2f;
     [Space(10)]
-    [SerializeField, Range(0, 1)] private float clickedAlphaPercent = 0.5f;
-    [SerializeField, Range(0, 1)] private float clickedFadeTime = 0.1f;
+    [SerializeField, Range(0, 1)] private float clickedAlphaPercent = 0.6f;
+    [SerializeField, Range(0, 1)] private float clickedFadeTime = 0.075f;
     [Space(10)]
-    [SerializeField] private UnityEvent onHover;
+    [SerializeField] private UnityEvent onMouseEnter;
+    [SerializeField] private UnityEvent onMouseExit;
     [SerializeField] private UnityEvent onClick;
 
     private Image btnImage;
@@ -39,12 +40,14 @@ public class CustomBtn : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     {
         fadingIn = true;
         fadingOut = false;
+        onMouseEnter.Invoke();
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         fadingIn = false;
         fadingOut = true;
+        onMouseExit.Invoke();
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -79,16 +82,9 @@ public class CustomBtn : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
     private void ClickFadeHandler()
     {
-        if (clickFadeIn)
-        {
-            currentClickedFadeTime += Time.deltaTime;
-            if (currentClickedFadeTime >= clickedFadeTime) clickFadeIn = false;
-        }
-        else
-        {
-            currentClickedFadeTime -= Time.deltaTime;
-            if (currentClickedFadeTime <= 0) clicked = false;
-        }
+        currentClickedFadeTime += clickFadeIn ? Time.deltaTime : -Time.deltaTime;
+        if (currentClickedFadeTime >= clickedFadeTime) clickFadeIn = false;
+        if (!clickFadeIn && currentClickedFadeTime <= 0) clicked = false;
 
         float newAplha = (initColor.a - hoverAlphaDif) - (clickedAplhaDif / clickedFadeTime * currentClickedFadeTime);
         btnImage.color = new Color(initColor.r, initColor.g, initColor.b, newAplha);
